@@ -17,15 +17,19 @@ import pandas as pd
 import glob
 import netCDF4 as nc 
 import sys
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 def opentiff(filename):
     
    "Input: Filename of GeoTIFF File "
    "Output: xgrid,ygrid, data paramater of Tiff, the data projection"
    
+   
    da = xr.open_rasterio(filename)
    proj = CRS.from_string(da.crs)
-
+   
+   
    transform = Affine(*da.transform)
    elevation = np.array(da.variable[0],dtype=np.float32)
    nx,ny = da.sizes['x'],da.sizes['y']
@@ -64,7 +68,6 @@ def exporttiff(x,y,z,crs,path,filename):
 
 
 def reproject(raw_lon,raw_lat):
-     
     
     WGSProj = CRS.from_string("+init=EPSG:4326")
     PolarProj = CRS.from_string("+init=EPSG:3413")
@@ -154,17 +157,17 @@ class AVHRR():
         
         xx,yy,albedo = self.get_data(polar = 1)
         mask_list = glob.glob(self.base_folder + os.sep + 'masks' + os.sep + '*.csv')
-        
+        grid_list = glob.glob(self.base_folder + os.sep + 'masks' + os.sep + '*2_5km.tif')
         
         if area:
             mask_list = [m for m in mask_list if m.split(os.sep)[-1].split('_')[0] in area]
+            grid_list = [g for g in grid_list if g.split(os.sep)[-1].split('_')[0] in area]
         
-        epsX = (7 * 10**-5) # These constants are Found Empiracally, dont touch
-        epsY = (2 * 10**-5) # These constants are Found Empiracally, dont touch
+        eps = (2 * 10**-5) # Shape Parameter
         
         outdata = {}
         
-        for m in mask_list:
+        for m,g in zip(mask_list,grid_list):
             
             a = m.split(os.sep)[-1].split('_')[0]
             
@@ -183,40 +186,38 @@ class AVHRR():
             alb_filt = albedo[bbmsk]
             
             
-            x_range = np.arange(min_x,max_x,res,dtype=np.float32)
-            y_range = np.arange(min_y,max_y,res,dtype=np.float32)
+            #x_range = np.arange(min_x,max_x,res,dtype=np.float32)
+            #y_range = np.arange(min_y,max_y,res,dtype=np.float32)
             
-            x_grid,y_grid = np.meshgrid(x_range,y_range)
+            #x_grid,y_grid = np.meshgrid(x_range,y_range)
             
-            datagrid = np.ones_like(x_grid) * np.nan
+            x_grid,y_grid,z_grid,gridproj = opentiff(g)            
+            
+            datagrid = np.ones_like(z_grid) * z_grid
             
             tree = KDTree(np.transpose(np.array([xx_filt,yy_filt])))
+            
             
             print('Interpolating for ' + a)
             
             for i,(xmid,ymid) in enumerate(zip(x_grid.ravel(),y_grid.ravel())):
                 
-                dd, ii = tree.query([xmid,ymid],k = 20,p = 1)
+                dd, ii = tree.query([xmid,ymid],k = 20,p = 2)
                 
+                dd = dd[~np.isnan(alb_filt.ravel()[ii])]
                 ii = ii[~np.isnan(alb_filt.ravel()[ii])]
                 
                 
-                distX = abs(xmid - xx_filt[ii])
-                distY = abs(ymid - yy_filt[ii])
-                
-                
-                if (len(ii) == 0):
+                if (len(ii) == 0) or (datagrid.ravel()[i] != 220):
                     
                     
                     datagrid.ravel()[i] = np.nan
                     
                    
                 else: 
+
                     
-                    w_x = np.exp(-(epsX * distX)**2)
-                    w_y = np.exp(-(epsY * distY)**2)
-                    
-                    w = w_y * w_x
+                    w = np.exp(-(eps * dd)**2)
                    
                     datagrid.ravel()[i] = np.average(alb_filt.ravel()[ii], weights = w)
             
@@ -228,16 +229,21 @@ class AVHRR():
         
     def export_to_tif(self,output = None, path = 'default'):    
         
-     
+        
         crs = CRS.from_string("+init=EPSG:3413")
+        
         
         if output is None: 
             
             output = self.proc()
             
         if path == 'default':
-            path = self.base_folder + os.sep + "output"
-        
+            pathoutput = self.base_folder + os.sep + "output"
+            if not os.path.exists(pathoutput):
+                os.mkdir(pathoutput)
+            path = self.base_folder + os.sep + "output" + os.sep + self.date
+            
+            
         if not os.path.exists(path):
             os.mkdir(path)
             
@@ -264,7 +270,7 @@ class AVHRR():
             output = self.proc()
             
         if path == 'default':
-            path = self.base_folder + os.sep + "output"
+            path = self.base_folder + os.sep + "output" + os.sep + self.date
         
         if not os.path.exists(path):
             os.mkdir(path)
@@ -293,7 +299,8 @@ class AVHRR():
             output = self.proc()
             
         if path == 'default':
-            path = self.base_folder + os.sep + "output"
+            
+            path = self.base_folder + os.sep + "output" + os.sep + self.date
         
         if not os.path.exists(path):
             os.mkdir(path)
