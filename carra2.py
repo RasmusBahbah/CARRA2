@@ -152,7 +152,7 @@ class AVHRR():
         
              
         
-    def proc(self,area = None,res = 2500):
+    def proc(self,raw_data = None, area = None,res = 2500):
                     
         
         xx,yy,albedo = self.get_data(polar = 1)
@@ -165,7 +165,7 @@ class AVHRR():
         
         eps = (2 * 10**-5) # Shape Parameter
         
-        outdata = {}
+        data = {}
         
         for m,g in zip(mask_list,grid_list):
             
@@ -222,10 +222,10 @@ class AVHRR():
                     datagrid.ravel()[i] = np.average(alb_filt.ravel()[ii], weights = w)
             
             
-            outdata[a] = {"x" : x_grid,\
+            data[a] = {"x" : x_grid,\
                           "y" : y_grid,\
                           "albedo" : datagrid}
-        return outdata
+        return data
         
     def export_to_tif(self,output = None, path = 'default'):    
         
