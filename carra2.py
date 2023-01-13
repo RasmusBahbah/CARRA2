@@ -18,6 +18,7 @@ import glob
 import netCDF4 as nc 
 import sys
 import warnings
+import datetime as dt
 warnings.filterwarnings("ignore", category=FutureWarning)
 
 def opentiff(filename):
@@ -103,7 +104,12 @@ class AVHRR():
         
         base_url = 'https://www.ncei.noaa.gov/data/avhrr-polar-pathfinder-extended/access/nhem'
         
-        procdates = ['20190624','20190625','20190618',self.date, str(int(self.date) + 3),str(int(self.date) + 6)]
+        date_1 = dt.datetime.strptime(self.date, "%Y%m%d")
+        
+        procdatesplus = [(date_1 + delta).strftime("%Y%m%d") for delta in \
+                         [dt.timedelta(days=int(d)) for d in np.arange(0,6)]]
+        
+        procdates = ['20190624','20190625','20190618'] + procdatesplus
         
         check = 0
         
