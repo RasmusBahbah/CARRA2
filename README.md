@@ -34,9 +34,10 @@ Reproject and Intepolate raw AVHRR data to ESPG:3413 and a better resolution.
 The data is also masked to 9 possible search areas in the arctic region
 
 #### Parameter: raw_data: tuple
-&emsp;&emsp;&emsp;&emsp;&emsp;   if None or False the output will be in a EPSG:4326 projection, if True the output will be in a EPSG:3413 projection.
+&emsp;&emsp;&emsp;&emsp;&emsp;   if None, the data for the processing wil come from get_data(), else, the user has tp input the data wants processed. the tuple needs to include (x,y,albedo) in that order, x and y is the data coordinates in EPSG:3413 with shape (m,n). Albedo is the raw albedo data from AVHRR in shape (m,n)  
  
 #### &emsp;&emsp;&emsp;&emsp;&emsp;  area: str, list of str
+&emsp;&emsp;&emsp;&emsp;&emsp; 
 
 #### &emsp;&emsp;&emsp;&emsp;&emsp;  res: int
 
