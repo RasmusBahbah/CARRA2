@@ -9,7 +9,7 @@ Installation
 ================
 
 **Clone the repository:**
-    ''*git clone git@github.com:RasmusBahbah/carra2py.git*''
+    ''git clone git@github.com:RasmusBahbah/carra2py.git''
 
 **Change into the top-level directory:**
     ''*cd carra2py*''
