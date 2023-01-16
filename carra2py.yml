@@ -1,4 +1,4 @@
-name: CARRA2
+name: carra2py
 channels:
   - conda-forge
   - defaults
