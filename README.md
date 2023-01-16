@@ -2,7 +2,7 @@ https://carra2.readthedocs.io/en/latest/
 
 
 
-# Copernicus Arctic Re-Analysis project v2 (CARRA2).
+# Copernicus Arctic Re-Analysis project v2 Python (CARRA2PY).
 Sentinel-3, MODIS and AVHRR inputs assimilated into a state of the art numerical weather prediction system (HARMONIE)
 Advanced Very-High-Resolution Radiometer
 # CARRA2 Input Module
