@@ -1,11 +1,11 @@
 
 ================
-carra2py Methods
+carra2py Modules and Methods
 ================
 
 Description of the carra2py modules and its methods.
 
-class carra2.AVHRR(date):
+class carra2py.AVHRR(date):
 ================
 
 Methods:
