@@ -12,7 +12,8 @@ You can use ``backticks`` for showing ``highlighted`` code.
 
 .. toctree::
     :maxdepth: 3
-
+    :Caption: Contents:
+    
     Installation
     Dependencies
     Examples
