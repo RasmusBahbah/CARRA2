@@ -9,16 +9,16 @@ Installation
 ================
 
 **Clone the repository:**
-    ''git clone git@github.com:RasmusBahbah/carra2py.git''
+    ``git clone git@github.com:RasmusBahbah/carra2py.git``
 
 **Change into the top-level directory:**
-    ''*cd carra2py*''
+    ``cd carra2py*``
 
 **Create python environement:**
-    ''*conda env create -f carra2py.yml*''
+    ``*conda env create -f carra2py.yml*``
 
 **Activate python environement:**
-    ''*conda activate carra2py*''
+    ``*conda activate carra2py*``
 
 
 Dependencies
