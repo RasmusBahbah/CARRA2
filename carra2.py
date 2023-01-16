@@ -39,7 +39,6 @@ def opentiff(filename):
    "Input: Filename of GeoTIFF File "
    "Output: xgrid,ygrid, data paramater of Tiff, the data projection"
    
-   
    da = xr.open_rasterio(filename)
    proj = CRS.from_string(da.crs)
    
@@ -161,30 +160,28 @@ class AVHRR():
         ncfile = nc.Dataset(data_folder + os.sep + file)
         
         if polar is None: 
-            
             raw_alb = np.array(ncfile["cdr_surface_albedo"])[0]
             raw_alb[raw_alb == 9999] = np.nan
             raw_lon = np.array(ncfile["longitude"])
             raw_lat = np.array(ncfile["latitude"])
             ncfile.close()
             
-            if not any(~(np.isnan(raw_alb.ravel()))):
-                
+            if not any(~(np.isnan(raw_alb.ravel()))):                
                 logging.info(f'No surface albedo data was available on {self.date}')
+                
                 return None
             
             return raw_lon,raw_lat,raw_alb
             
         else: 
-            
             raw_alb = np.array(ncfile["cdr_surface_albedo"])[0]
             raw_x,raw_y = reproject(np.array(ncfile["longitude"]),np.array(ncfile["latitude"]))
             raw_alb[raw_alb == 9999] = np.nan
             ncfile.close()
            
             if not any(~(np.isnan(raw_alb.ravel()))):
-                
                 logging.info(f'No surface albedo data was available on {self.date}')
+                
                 return None
                     
             return raw_x,raw_y,raw_alb
@@ -192,9 +189,7 @@ class AVHRR():
              
         
     def proc(self,raw_data = None, area = None,res = 2500):
-        
-        #logging.info(f'Date: {self.date}')
-            
+
         if not raw_data:
             raw_data = self.get_data(polar = 1)
             
@@ -213,10 +208,8 @@ class AVHRR():
         res_proc = [1000,2500,5000]
         
         if res not in res_proc: 
-            
             raise Exception('Specified resolution is not available. ' + \
                           'Please use one of these options ' + str(res_proc))
-            
         
         mask_list = glob.glob(self.base_folder + os.sep + 'masks' + os.sep + '*.csv')
         grid_list = glob.glob(self.base_folder + os.sep + 'masks' + os.sep + '*' + str(res) + 'm.tif')
@@ -230,7 +223,6 @@ class AVHRR():
         data = {}
           
         for m,g in zip(mask_list,grid_list):
-            
             a = m.split(os.sep)[-1].split('_')[0]
             
             logging.info(f'Processing for {a},{self.date}')
@@ -241,7 +233,6 @@ class AVHRR():
             min_y = int(df['MINY']) 
             max_y = int(df['MAXY']) 
             
-            #print("min y: ",int(min_y))
             bbmsk =  (xx <= max_x) & (xx >= min_x)\
                    & (yy >= min_y) & (yy <= max_y)
                       
@@ -258,8 +249,7 @@ class AVHRR():
             
             
             
-            for i,(xmid,ymid) in enumerate(zip(x_grid.ravel(),y_grid.ravel())):
-                
+            for i,(xmid,ymid) in enumerate(zip(x_grid.ravel(),y_grid.ravel())):     
                 dd, ii = tree.query([xmid,ymid],k = 20,p = 2)
                 
                 dd = dd[~np.isnan(alb_filt.ravel()[ii])]
@@ -267,21 +257,13 @@ class AVHRR():
                 
                 
                 if (len(ii) == 0) or (datagrid.ravel()[i] != 220):
-                    
-                    
                     datagrid.ravel()[i] = np.nan
                     
-                   
                 else: 
-
-                    
                     w = np.exp(-(eps * dd)**2)
-                   
                     datagrid.ravel()[i] = np.average(alb_filt.ravel()[ii], weights = w)
             
-            
             if not any(~(np.isnan(datagrid.ravel()))):
-                
                 logging.info(f'No surface albedo data was available at {a},{self.date}')
                 
             else: 
@@ -297,31 +279,30 @@ class AVHRR():
         
     def export_to_tif(self,output = None, path = 'default'):    
         
-        
-        crs = CRS.from_string("+init=EPSG:3413")
-        
-        
-        if output is None: 
-            
-            output = self.proc()
-            
-            if not output:
-                
-                return
-            
-            
         if path == 'default':
             pathoutput = self.base_folder + os.sep + "output"
+            
             if not os.path.exists(pathoutput):
                 os.mkdir(pathoutput)
+                
             path = self.base_folder + os.sep + "output" + os.sep + self.date
-            
-
+        
         if not os.path.exists(path):
             os.mkdir(path)
             
-        for a in output:
+        else:
+            logging.info(f'Output already existst, skippting {self.date}')
             
+        crs = CRS.from_string("+init=EPSG:3413")
+        
+        if output is None: 
+            output = self.proc()
+            
+            if not output:
+                return
+            
+            
+        for a in output:
             x = output[a]["x"]
             y = output[a]["y"]
             z = output[a]["albedo"]
@@ -340,11 +321,9 @@ class AVHRR():
     def export_to_csv(self,output = None, path = 'default'):
         
         if output is None: 
-            
             output = self.proc()
             
             if not output:
-                
                 return
             
         if path == 'default':
@@ -354,8 +333,6 @@ class AVHRR():
             os.mkdir(path)
             
         for a in output: 
-            
-            
             x = output[a]["x"]
             y = output[a]["y"]
             z = output[a]["albedo"]
@@ -376,23 +353,18 @@ class AVHRR():
     def export_to_nc(self,output = None, path = 'default'):
         
         if output is None: 
-            
             output = self.proc()
             
-            if not output:
-                
+            if not output:   
                 return
             
         if path == 'default':
-            
             path = self.base_folder + os.sep + "output" + os.sep + self.date
         
         if not os.path.exists(path):
             os.mkdir(path)
             
         for a in output: 
-            
-            
             x = output[a]["x"]
             y = output[a]["y"]
             z = output[a]["albedo"]
@@ -400,7 +372,6 @@ class AVHRR():
             res = int((x[0,1] - x[0,0]) + (x[0,0] - x[1,0]))
             
             filename = self.date + "_" + a + "_" + str(res) + "m_AVHRR.nc"
-            
             
             ds = nc.Dataset(path + os.sep + filename, 'w', format='NETCDF4')
             
@@ -416,6 +387,5 @@ class AVHRR():
             alb_out[:,:] = z
         
             ds.close()
-            
             
         return
