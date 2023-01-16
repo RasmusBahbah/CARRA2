@@ -8,21 +8,17 @@ carra2py is a simple python package for download, reproject and process albedo d
 Installation
 ================
 
-Clone the repository:
+**Clone the repository:**
+    *git clone git@github.com:RasmusBahbah/carra2py.git*
 
-*git clone git@github.com:RasmusBahbah/carra2py.git*
+**Change into the top-level directory:**
+    *cd carra2py*
 
-Change into the top-level directory:
+**Create python environement:**
+    *conda env create -f carra2py.yml*
 
-*cd carra2py*
-
-Create python environement:
-
-*conda env create -f carra2py.yml*
-
-Activate python environement:
-
-*conda activate carra2py*
+**Activate python environement:**
+    *conda activate carra2py*
 
 
 Dependencies
