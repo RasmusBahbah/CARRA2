@@ -9,7 +9,7 @@ carra2py is a simple python module to download, reprpject and interpolate albedo
 This documentation explains how to install and use Carra2py.
 
 toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    Installation
    Dependencies
