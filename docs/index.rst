@@ -19,12 +19,3 @@ You can use ``backticks`` for showing ``highlighted`` code.
     Processing scripts
     Examples
 
-
-Heading
-=======
-
-Sub-heading
------------
-
-Paragraphs are separated
-by a blank line.
