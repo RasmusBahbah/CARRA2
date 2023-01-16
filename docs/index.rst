@@ -11,11 +11,13 @@ You can use ``backticks`` for showing ``highlighted`` code.
 
 
 .. toctree::
-    :maxdepth: 3
+    :maxdepth: 5
     :Caption: Contents:
     
     Installation
     Dependencies
+    carra2py methods
+    Processing scripts
     Examples
 
 
