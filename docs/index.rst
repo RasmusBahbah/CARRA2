@@ -13,7 +13,7 @@ This documentation explains how to install and use carra2py.
     :maxdepth: 5
     :Caption: Contents:
     
-    Installation
+    Introduction
     Dependencies
     carra2py methods
     Processing scripts
