@@ -8,8 +8,8 @@ Created on Fri Jan 13 13:34:21 2023
 import argparse
 import pandas as pd
 import sys 
-import carra2 
-from multiprocessing import Pool
+import carra2py
+from multiprocessing import set_start_method,get_context
 if sys.version_info < (3, 4):
     raise "must use python 3.6 or greater"
     
@@ -28,7 +28,7 @@ def parse_arguments():
     
 def multicarra2(date,res,area,out):
   
-    pathfinder = carra2.AVHRR(date,block=True)
+    pathfinder = carra2py.AVHRR(date,block=True)
     data = pathfinder.proc(area=area,res=res)
     
     if data:    
@@ -55,7 +55,9 @@ if __name__ == "__main__":
     print("Processing for date range: " + args.sday + " to " + args.eday)
     print("Number of Days: " + str(len(dates)))
    
-    with Pool(args.cores) as p:        
+    set_start_method("spawn")
+    
+    with get_context("spawn").Pool(args.cores) as p:       
             p.starmap(multicarra2,zip(dates,res,area,out))
     
     print("Processing Done!")
