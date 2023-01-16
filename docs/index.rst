@@ -14,7 +14,6 @@ This documentation explains how to install and use carra2py.
     :Caption: Contents:
     
     Introduction
-    Dependencies
     carra2py methods
     Processing scripts
     Examples
