@@ -1,6 +1,6 @@
 
 ================
-CARRA2 Documentation
+CARRA2PY Documentation
 ================
 
 Heading
