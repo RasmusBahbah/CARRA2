@@ -7,8 +7,8 @@ Introduction
 ================
 
 Installation
-----------------
+-------
 
 Dependencies
-----------------
+-------
 
