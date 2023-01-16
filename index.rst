@@ -1,6 +1,6 @@
 
 ================
-Document Heading
+CARRA2 Documentation
 ================
 
 Heading
