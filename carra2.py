@@ -5,7 +5,7 @@ Created on Tue Jan  3 14:26:47 2023
 @author: rabni
 """
 
-import os
+import sys,os
 from pyproj import CRS,Transformer
 from scipy.spatial import KDTree
 import xarray as xr
@@ -15,12 +15,25 @@ import rasterio
 import urllib.request
 import pandas as pd
 import glob
+import logging
 import netCDF4 as nc 
-import sys
+import time
 import warnings
 import datetime as dt
 warnings.filterwarnings("ignore", category=FutureWarning)
 
+if not os.path.exists("logs"):
+        os.makedirs("logs")
+        
+logging.basicConfig(
+        format='%(asctime)s [%(levelname)s] %(name)s - %(message)s',
+        level=logging.INFO,
+        datefmt='%Y-%m-%d %H:%M:%S',
+        handlers=[
+            logging.FileHandler(f'logs/carra2_{time.strftime("%Y_%m_%d",time.localtime())}.log'),
+            logging.StreamHandler()
+        ])
+        
 def opentiff(filename):
     
    "Input: Filename of GeoTIFF File "
@@ -35,6 +48,8 @@ def opentiff(filename):
    elevation = np.array(da.variable[0],dtype=np.float32)
    nx,ny = da.sizes['x'],da.sizes['y']
    x,y = np.meshgrid(np.arange(nx,dtype=np.float32), np.arange(ny,dtype=np.float32)) * transform
+   
+   da.close()
    
    return x,y,elevation,proj
 
@@ -65,6 +80,8 @@ def exporttiff(x,y,z,crs,path,filename):
     ) as dst:
         dst.write(z, 1)
     
+    dst.close()
+    
     return None 
 
 
@@ -78,14 +95,30 @@ def reproject(raw_lon,raw_lat):
     xx, yy = wgs_data.transform(raw_lon,raw_lat)
    
     return xx,yy
+   
+def blockPrint():
+    sys.stdout = open(os.devnull, 'w')
 
+def enablePrint():
+    sys.stdout = sys.__stdout__
+    
 class AVHRR():
     
-    def __init__(self,date):
+    def __init__(self,date,block = None):
             
         self.date = date
         self.base_folder = os.getcwd()
+        self.block = block
         
+        #print(self.block)
+        #print(self.date)
+        #print(self.base_folder)
+        
+        if self.block: 
+            blockPrint()
+        else: 
+            enablePrint()
+            
     def get_data(self,polar = None):
       
         
@@ -136,10 +169,9 @@ class AVHRR():
             ncfile.close()
             
             if not any(~(np.isnan(raw_alb.ravel()))):
-                print('No surface albedo data was available'+\
-                              'on the given date')
-                sys.exit()
-            
+                
+                logging.info(f'No surface albedo data was available on {self.date}')
+                return None
             
             return raw_lon,raw_lat,raw_alb
             
@@ -150,20 +182,29 @@ class AVHRR():
             raw_alb[raw_alb == 9999] = np.nan
             ncfile.close()
            
-            
             if not any(~(np.isnan(raw_alb.ravel()))):
-                print('No surface albedo data was available'+\
-                              'on the given date')
-                sys.exit()
                 
+                logging.info(f'No surface albedo data was available on {self.date}')
+                return None
+                    
             return raw_x,raw_y,raw_alb
         
              
         
     def proc(self,raw_data = None, area = None,res = 2500):
-                    
+        
+        #logging.info(f'Date: {self.date}')
+            
         if not raw_data:
-            xx,yy,albedo = self.get_data(polar = 1)
+            raw_data = self.get_data(polar = 1)
+            
+            if not raw_data:
+                return None
+            
+            else:
+                xx = raw_data[0]
+                yy = raw_data[1]
+                albedo = raw_data[2]
         else: 
             xx = raw_data[0]
             yy = raw_data[1]
@@ -173,9 +214,9 @@ class AVHRR():
         
         if res not in res_proc: 
             
-            print('Specified resolution is not available. ' + \
+            raise Exception('Specified resolution is not available. ' + \
                           'Please use one of these options ' + str(res_proc))
-            sys.exit()
+            
         
         mask_list = glob.glob(self.base_folder + os.sep + 'masks' + os.sep + '*.csv')
         grid_list = glob.glob(self.base_folder + os.sep + 'masks' + os.sep + '*' + str(res) + 'm.tif')
@@ -187,10 +228,12 @@ class AVHRR():
         eps = (2 * 10**-5) # Shape Parameter
         
         data = {}
-        
+          
         for m,g in zip(mask_list,grid_list):
             
             a = m.split(os.sep)[-1].split('_')[0]
+            
+            logging.info(f'Processing for {a},{self.date}')
             
             df = pd.read_csv(m)
             min_x = int(df['MINX']) 
@@ -207,11 +250,6 @@ class AVHRR():
             alb_filt = albedo[bbmsk]
             
             
-            #x_range = np.arange(min_x,max_x,res,dtype=np.float32)
-            #y_range = np.arange(min_y,max_y,res,dtype=np.float32)
-            
-            #x_grid,y_grid = np.meshgrid(x_range,y_range)
-            
             x_grid,y_grid,z_grid,gridproj = opentiff(g)            
             
             datagrid = np.ones_like(z_grid) * z_grid
@@ -219,7 +257,6 @@ class AVHRR():
             tree = KDTree(np.transpose(np.array([xx_filt,yy_filt])))
             
             
-            print('Interpolating for ' + a)
             
             for i,(xmid,ymid) in enumerate(zip(x_grid.ravel(),y_grid.ravel())):
                 
@@ -243,10 +280,20 @@ class AVHRR():
                     datagrid.ravel()[i] = np.average(alb_filt.ravel()[ii], weights = w)
             
             
-            data[a] = {"x" : x_grid,\
-                          "y" : y_grid,\
-                          "albedo" : datagrid}
-        return data
+            if not any(~(np.isnan(datagrid.ravel()))):
+                
+                logging.info(f'No surface albedo data was available at {a},{self.date}')
+                
+            else: 
+                logging.info(f'Processing done for {a},{self.date}')    
+                
+                data[a] = {"x" : x_grid,\
+                              "y" : y_grid,\
+                              "albedo" : datagrid}
+        if len(data) == 0:
+            return None
+        else:
+            return data
         
     def export_to_tif(self,output = None, path = 'default'):    
         
@@ -257,6 +304,10 @@ class AVHRR():
         if output is None: 
             
             output = self.proc()
+            
+            if not output:
+                
+                return
             
             
         if path == 'default':
@@ -292,6 +343,10 @@ class AVHRR():
             
             output = self.proc()
             
+            if not output:
+                
+                return
+            
         if path == 'default':
             path = self.base_folder + os.sep + "output" + os.sep + self.date
         
@@ -323,6 +378,10 @@ class AVHRR():
         if output is None: 
             
             output = self.proc()
+            
+            if not output:
+                
+                return
             
         if path == 'default':
             
