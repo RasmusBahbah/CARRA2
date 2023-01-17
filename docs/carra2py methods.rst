@@ -57,9 +57,10 @@ Reproject and Intepolate raw AVHRR data to ESPG:3413 and a better resolution. Th
              
              The resoultion of the output, there are three options, 1000,2500 or 5000 all in meters, the default is set to 2500 meters.
              
-**Returns:     output: dictionary of floats:**
+**Returns:     output: dict of floats:**
 
-             outputs a dictionary of the albedo at each area in the specifiec resolution
+             outputs a dictionary of the albedo at each area in the specifiec resolution in EPSG:3413 projection.
+             The dictionary strutcture: output[area] = {"x" : x_coordinates, "y" : y_coordinates, "albedo" : albedo}
              
 AVHRR.export_to_tif(polar=None)
 ~~~~~~~~~~~~~~~~
