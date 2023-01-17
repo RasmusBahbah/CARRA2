@@ -26,7 +26,7 @@ Import the raw AVHRR data of the northern hempishere in native resolution of 500
                 if None or False the output will be in a EPSG:4326 projection, if True the output will be in a EPSG:3413 projection.
                 
                 
- **Returns:   raw_lon or raw_x: (m,n) array of floats:**
+**Returns:   raw_lon or raw_x: (m,n) array of floats:**
               
               Longitude coordinates (EPSG:4326) of raw data if polar == None or False, x cooordinates (EPSG:3413) of raw data if polar == True.
               
