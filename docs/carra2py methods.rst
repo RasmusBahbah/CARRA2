@@ -35,10 +35,10 @@ Import the raw AVHRR data of the northern hempishere in native resolution of 500
               Latitiude coordinates (EPSG:4326) of raw data if polar == None or False, y cooordinate (EPSG:3413) of raw data if polar == True.
               
               **raw_alb: (m,n) array of floats:**
-            
+              
               Raw albedo data in native 5000 meter resolution
-          
-          
+              
+
 AVHRR.proc(raw_data=None, area=None, res=2500)
 ~~~~~~~~~~~~~~~~
 
