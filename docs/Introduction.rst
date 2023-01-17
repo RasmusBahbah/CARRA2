@@ -3,7 +3,9 @@
 Introduction
 ================
 
-carra2py is a simple python package for download, reproject and process albedo data for CARRA2 
+carra2py is a simple python package for downloading, reprojecting and processing albedo data for CARRA2 in the arctic region.
+For now it includes the Advanced Very High Resolution Radiometer (AVHRR) dataset from 1984-present.
+
 
 Installation
 ================
