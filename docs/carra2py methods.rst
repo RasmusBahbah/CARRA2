@@ -62,7 +62,7 @@ Reproject and Intepolate raw AVHRR data to ESPG:3413 and a better resolution. Th
              outputs a dictionary of the albedo at each area in the specifiec resolution in EPSG:3413 projection.
              The dictionary strutcture: output[area] = {"x" : x_coordinates, "y" : y_coordinates, "albedo" : albedo}
              
-AVHRR.export_to_tif(polar=None)
+AVHRR.export_to_tif(output=None, path='default')
 ~~~~~~~~~~~~~~~~
 Export the processed data to tif files in ESPG:3413
 
@@ -81,8 +81,42 @@ Export the processed data to tif files in ESPG:3413
 
              The method will not return anything
              
-AVHRR.export_to_csv(polar=None)
+AVHRR.export_to_csv(output=None, path='default')
 ~~~~~~~~~~~~~~~~
 
-AVHRR.export_to_nc(polar=None)
+Export the processed data to csv files in ESPG:3413, the format will be 
+
+
+**Parameter: output: dict**
+         
+             If None, the exported processed data will come from AVHRR.proc(raw_data=None, area=None, res=2500) with the default inputs. Else,
+             input the processed data you want to export, the input needs to be a dictionary with this format: 
+             output[area] = {"x" : x_coordinates, "y" : y_coordinates, "albedo" : albedo}
+             
+             **path: str**
+             
+             if "default", the data will be exported to /output/"yyyymmdd", Else, specify the output folder.
+             
+**Returns:     None**
+
+             The method will not return anything
+
+AVHRR.export_to_nc(output=None, path='default')
 ~~~~~~~~~~~~~~~~
+
+Export the processed data to netcdf4 files in ESPG:3413, the format will be
+
+
+**Parameter: output: dict**
+         
+             If None, the exported processed data will come from AVHRR.proc(raw_data=None, area=None, res=2500) with the default inputs. Else,
+             input the processed data you want to export, the input needs to be a dictionary with this format: 
+             output[area] = {"x" : x_coordinates, "y" : y_coordinates, "albedo" : albedo}
+             
+             **path: str**
+             
+             if "default", the data will be exported to /output/"yyyymmdd", Else, specify the output folder.
+             
+**Returns:     None**
+
+             The method will not return anything
