@@ -48,6 +48,19 @@ Reproject and Intepolate raw AVHRR data to ESPG:3413 and a better resolution. Th
              
              if None, the data for the processing wil come from get_data(), else, the user has tp input the data wants processed. the tuple needs to include                        (x,y,albedo) in that order, x and y is the data coordinates in EPSG:3413 with shape (m,n). Albedo is the raw albedo data from AVHRR in shape (m,n)
              
+             **area: str, or list:**
+             
+             if None, all areas in the arctic with glaciers are processed. Else, indicate which area or areas you want to process.
+             Areas included: [AlaskaYukon, Greenland, Iceland, NorthernArcticCanada, SoutherArcticCanada, Norway, SevernayaZemlya, NovayaZemlya, Svalbard]
+             
+             **res: int:**
+             
+             The resoultion of the output, there are three options, 1000,2500 or 5000 all in meters, the default is set to 2500 meters.
+             
+**Returns:     output: dictionary of floats:**
+
+             outputs a dictionary of the albedo at each area in the specifiec resolution
+             
 AVHRR.export_to_tif(polar=None)
 ~~~~~~~~~~~~~~~~
 
