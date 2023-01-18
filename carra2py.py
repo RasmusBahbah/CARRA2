@@ -341,9 +341,9 @@ class AVHRR():
             
             filename = self.date + "_" + a + "_" + str(res) + "m_AVHRR.csv"
             
-            df = pd.DataFrame({'x' : x,\
-                               'y' : y,\
-                               'albedo' : z})
+            df = pd.DataFrame({'x' : x.ravel(),\
+                               'y' : y.ravel(),\
+                               'albedo' : z.ravel()})
                 
             df.to_csv(path + os.sep + filename)
 
