@@ -14,12 +14,12 @@ These examples are executed in a python console, the chosen date is 6th of May, 
 
 **First import the carra2py package**
    ``import carra2py``
-
+   
+**and then input the date in the carra2py.AVHRR() module**
+    ``avhrr = carra2py.AVHRR("19940506")``
+    
 How to download raw data
 ------------------------
-
-**input the date in the carra2py.AVHRR() module**
-    ``avhrr = carra2py.AVHRR("19940506")``
 
 **get the data in EPSG:4326 using the get_data() method**
     ``rawdata = avhrr.get_data()``
