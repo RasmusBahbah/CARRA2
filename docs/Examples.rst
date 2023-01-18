@@ -64,15 +64,42 @@ multiexec.py
 ================
 
 These examples are executed as command lines in a terminal, in your carra2py environment.
+The default settings is set to process for all regions with a resolution of 2500 meters using 4 CPU cores and then export as tif files.
+Please note, the user must input a start and end date for the processing.
+These examples are all exectued with the time period 1st of January, 1982 - 31th of December, 2022.
 
 How to process several dates
 -----------------------------
+**Process with default settings**
+     ``python multiexec.py -st 19820101 -en 20221231``  
+     
+ **Process with 1000 meter resolution**
+     ``python multiexec.py -st 19820101 -en 20221231 -re 1000``
 
 How to process specific areas
 ------------------------------
+**Process for Svalbard, NorthernArcticCanada and SevernayaZemlya**
+     ``python multiexec.py -st 19820101 -en 20221231 -ar [Svalbard,NorthernArcticCanada,SevernayaZemlya]``  
+     
+ **Process for Greenland and Iceland with 1000 meter resolution**
+     ``python multiexec.py -st 19820101 -en 20221231 -ar [Greenland,Iceland] -re 1000``  
 
 How to change output format
 -----------------------------
 
+**Process with default settings and then export as netcdf files**
+     ``python multiexec.py -st 19820101 -en 20221231 -o nc`` 
+     
+**Process with default settings and then export as csv files**
+     ``python multiexec.py -st 19820101 -en 20221231 -o csv`` 
+     
 how to change the number of cores used
 --------------------------------------
+
+**Process using 8 cores**
+     ``python multiexec.py -st 19820101 -en 20221231 -c 8`` 
+     
+**Process using 1 cores**
+     ``python multiexec.py -st 19820101 -en 20221231 -c 1`` 
+     
+
