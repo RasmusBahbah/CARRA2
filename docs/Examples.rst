@@ -30,7 +30,7 @@ How to get the raw data
 How to process data 
 --------------------
 the default settings is set to process for all regions with a resolution of 2500 meters.
-Note that the region names have the spelling as in the table in the introduction section.
+Note that the region names have the same spelling as in the table in the introduction section.
 
 **Process with default settings**
     ``output = avhrr.proc()``
@@ -43,6 +43,22 @@ Note that the region names have the spelling as in the table in the introduction
     
 How to export data
 --------------------
+the default export settings is set to process for all regions with a resolution of 2500 meters.
+
+**Export as tif with default settings**
+     ``avhrr.export_to_tif()``
+     
+**Export as csv with default settings**
+     ``avhrr.export_to_csv()``
+     
+**Export as netcdf with default settings**
+     ``avhrr.export_to_nc()``
+     
+**Export user defined processed data as tif**
+     ``avhrr.export_to_tif(output=output)``   
+     
+**Export user defined processed data as netcdf in specfic folder**
+     ``avhrr.export_to_nc(output=output,path="home/carra2py/john/statoil")``  
 
 multiexec.py
 ================
