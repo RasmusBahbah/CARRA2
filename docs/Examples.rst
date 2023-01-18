@@ -93,7 +93,7 @@ How to change output format
 **Process with default settings and then export as csv files**
      ``python multiexec.py -st 19820101 -en 20221231 -o csv`` 
      
-how to change the number of cores used
+How to change the number of cores used
 --------------------------------------
 
 **Process using 8 cores**
