@@ -81,7 +81,7 @@ How to process specific areas
 **Process for Svalbard, NorthernArcticCanada and SevernayaZemlya**
      ``python multiexec.py -st 19820101 -en 20221231 -ar [Svalbard,NorthernArcticCanada,SevernayaZemlya]``  
      
- **Process for Greenland and Iceland with 1000 meter resolution**
+**Process for Greenland and Iceland with 1000 meter resolution**
      ``python multiexec.py -st 19820101 -en 20221231 -ar [Greenland,Iceland] -re 1000``  
 
 How to change output format
