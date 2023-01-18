@@ -13,6 +13,8 @@ Installation
 **Clone the repository:**
     ``git clone git@github.com:RasmusBahbah/carra2py.git``
 
+**Or download from https://github.com/RasmusBahbah/carra2py:**
+    
 **Change into the top-level directory:**
     ``cd carra2py``
 
