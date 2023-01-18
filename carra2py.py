@@ -153,7 +153,11 @@ class AVHRR():
                     check = 1
                 except:
                     pass
-        
+                
+        if check == 0:
+             logging.info('Data service is unavailable, try another date or later')
+             
+             return None
         
         os.chdir(self.base_folder)
         
