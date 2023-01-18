@@ -99,7 +99,15 @@ how to change the number of cores used
 **Process using 8 cores**
      ``python multiexec.py -st 19820101 -en 20221231 -c 8`` 
      
-**Process using 1 cores**
+**Process using 1 core**
      ``python multiexec.py -st 19820101 -en 20221231 -c 1`` 
+     
+    
+Example with all arguments
+--------------------------------------
+
+**Process using 6 cores, for Norway and NovayaZemlya, with a 5000 meter resolution, and then export as netcdf**
+     ``python multiexec.py -st 19820101 -en 20221231 -ar [Norway,NovayaZemlya] -c 6 -re 5000 -o nc`` 
+
      
 
