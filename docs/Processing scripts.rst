@@ -9,7 +9,7 @@ Description of utility scripts for carra2py.
 multiexec.py:
 ================
 
-An executable script used for processing and exporting albedo data over multiple dates in a defined time period. It is also possible to use multiple cores to speed the process.
+An executable script used for processing and exporting albedo data over multiple dates in a defined time period. It is also possible to use multiple CPU cores to speed the process.
 
 Arguments:
 ----------------
@@ -24,4 +24,4 @@ Arguments:
 
 **-o: the wanted output format, there are three choices ["tif","csv","nc"], the default is set to "tif"**
 
-**-c: number of cores the user want to use. The default is set to 4** 
+**-c: number of CPU cores the user want to use. The default is set to 4** 
