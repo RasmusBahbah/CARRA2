@@ -32,7 +32,7 @@ Python 3.5 or up
 Processing Regions
 ================
 
-The latest carra2py version can process for 9 Regions: 
+The latest carra2py version can process 9 different Regions: 
 
 +----------------------+-------------+
 | Region               | area [km^2] |
