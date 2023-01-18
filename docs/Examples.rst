@@ -18,7 +18,7 @@ These examples are executed in a python console, the chosen date is 6th of May, 
 **and then input the date in the carra2py.AVHRR() module**
     ``avhrr = carra2py.AVHRR("19940506")``
     
-How to download raw data
+How to get the raw data
 ------------------------
 
 **get the data in EPSG:4326 using the get_data() method**
@@ -29,7 +29,18 @@ How to download raw data
     
 How to process data 
 --------------------
+the default settings is set to process for all regions with a resolution of 2500 meters.
+Note that the region names have the spelling as in the table in the introduction section.
 
+**Process with default settings**
+    ``output = avhrr.proc()``
+    
+**Process for Greenland, Iceland and  AlaskaYukon, with a 1000 m resolution**
+    ``output = avhrr.proc(area = ["Greenland","Iceland","AlaskaYukon"],res=1000)``
+    
+**Process with rawdata from user, see "carra2py Modules and Methods" for input specifications**
+    ``output = avhrr.proc(raw_data=rawdata)``
+    
 How to export data
 --------------------
 
