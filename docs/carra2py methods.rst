@@ -8,7 +8,7 @@ Description of the carra2py modules and its methods.
 class carra2py.AVHRR(date):
 ================
 
-Parameter: date: str
+Attributes: date: str
 ----------------
 
 the processed date, only in 'yyyymmdd' format
