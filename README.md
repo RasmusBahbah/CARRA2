@@ -5,6 +5,6 @@ The latest version includes albedo data from the Advanced Very High Respolution 
 
 Documentation: https://carra2.readthedocs.io/en/latest/index.html
 
-## Referemces
+## References
 
 [1]    Key, Jeffrey; Wang, Xuanji; Liu, Yinghui; and NOAA CDR Program (2019). NOAA Climate Data Record of AVHRR Polar Pathfinder Extended (APP-X), Version 2. [indicate subset used]. NOAA National Centers for Environmental Information. doi:10.25921/AE96-0E57
