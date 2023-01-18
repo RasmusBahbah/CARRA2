@@ -8,7 +8,7 @@ Description of the carra2py modules and its methods.
 class carra2py.AVHRR(date):
 ================
 
-Parameter: date: str
+Attributes: date: str
 ----------------
 
 the processed date, only in 'yyyymmdd' format
@@ -84,8 +84,7 @@ Export the processed data to tif files in ESPG:3413
 AVHRR.export_to_csv(output=None, path='default')
 ~~~~~~~~~~~~~~~~
 
-Export the processed data to csv files in ESPG:3413, the format will be 
-
+Export the processed data to csv files in ESPG:3413, the files will include three columns "x", "y" and "albedo" with length m*n 
 
 **Parameter: output: dict**
          
@@ -104,7 +103,7 @@ Export the processed data to csv files in ESPG:3413, the format will be
 AVHRR.export_to_nc(output=None, path='default')
 ~~~~~~~~~~~~~~~~
 
-Export the processed data to netcdf4 files in ESPG:3413, the format will be
+Export the processed data to netcdf4 files in ESPG:3413, the files will include three variables "x", "y" and "albedo" with shape (m,n) 
 
 
 **Parameter: output: dict**
