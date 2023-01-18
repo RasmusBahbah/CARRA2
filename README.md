@@ -1,6 +1,6 @@
 
 # Copernicus Arctic Re-Analysis project v2 Python (carra2py).
-Simple python package for downloading, reprojecting and interpolating satellite albedo data in the arctic region for the Copernicus Arctic Re-Analysis project v2 (CARRA2).
+Simple python package for downloading, reprojecting, masking and interpolating satellite albedo data in the arctic region for the Copernicus Arctic Re-Analysis project v2 (CARRA2).
 The latest version includes albedo data from the Advanced Very High Respolution Radiometer (AVHRR) satellite borne instrument in the period 1982 - present[1].
 
 Documentation: https://carra2.readthedocs.io/en/latest/index.html
