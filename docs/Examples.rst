@@ -73,7 +73,7 @@ How to process several dates
 **Process with default settings**
      ``python multiexec.py -st 19820101 -en 20221231``  
      
- **Process with 1000 meter resolution**
+**Process with 1000 meter resolution**
      ``python multiexec.py -st 19820101 -en 20221231 -re 1000``
 
 How to process specific areas
