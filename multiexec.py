@@ -19,7 +19,7 @@ def parse_arguments():
         parser.add_argument("-st","--sday", type=str,help="Please input the start day")
         parser.add_argument("-en","--eday", type=str,help="Please input the end day")
         parser.add_argument("-re","--res", type=int,choices=[1000,2500,5000],default=2500,help="Please input the resolution of the output")
-        parser.add_argument("-ar","--area", type=list,default=None,help="Please input the areas you want to process")
+        parser.add_argument("-ar","--area", type=str,default=None,help="Please input the areas you want to process")
         parser.add_argument("-o","--output", type=str,default="tif",choices=["tif","csv","nc"],help="Please specify the out format")
         parser.add_argument("-c","--cores", type=int,default=4,help="Please input the number of cores you want to use")
         args = parser.parse_args()
@@ -50,7 +50,6 @@ if __name__ == "__main__":
     res = [args.res for i in range(len(dates))]
     area = [args.area for i in range(len(dates))]
     out = [args.output for i in range(len(dates))]
-    
     
     print("Processing for date range: " + args.sday + " to " + args.eday)
     print("Number of Days: " + str(len(dates)))
