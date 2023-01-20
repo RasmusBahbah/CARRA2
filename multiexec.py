@@ -22,6 +22,7 @@ def parse_arguments():
         parser.add_argument("-ar","--area", type=str,default=None,help="Please input the areas you want to process")
         parser.add_argument("-o","--output", type=str,default="tif",choices=["tif","csv","nc"],help="Please specify the out format")
         parser.add_argument("-c","--cores", type=int,default=4,help="Please input the number of cores you want to use")
+        parser.add_argument("-se","--season", type=str,default="default",help="Please input the season you want to process")
         args = parser.parse_args()
         return args
     
@@ -45,8 +46,16 @@ def multicarra2(date,res,area,out):
 if __name__ == "__main__":
     
     args = parse_arguments() 
+    
+    if args.season == "default":
+        months = ["06","07","08","09"]
+        
+    else: 
+        months = ["01","02","03","04","05","06","07","08","09","10","11","12"]
+        
     dates = pd.date_range(start=args.sday,end=args.eday).to_pydatetime().tolist()
     dates = [d.strftime("%Y%m%d") for d in dates]
+    dates = [d for d in dates if d[4:6] in [ m for m in months]]
     res = [args.res for i in range(len(dates))]
     area = [args.area for i in range(len(dates))]
     out = [args.output for i in range(len(dates))]
