@@ -76,12 +76,12 @@ if __name__ == "__main__":
     area = [args.area for i in range(len(dates))]
     out = [args.output for i in range(len(dates))]
     
-    print("Processing for date range: " + args.sday + " to " + args.eday)
-    print("Number of Days: " + str(len(dates)))
+    logging.info("Processing for date range: " + args.sday + " to " + args.eday)
+    logging.info("Number of Days: " + str(len(dates)))
    
     set_start_method("spawn")
     
     with get_context("spawn").Pool(args.cores) as p:       
             p.starmap(multicarra2,zip(dates,res,area,out))
     
-    print("Processing Done!")
+    logging.info("Processing Done!")
