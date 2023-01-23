@@ -48,7 +48,7 @@ if __name__ == "__main__":
     args = parse_arguments() 
     
     if args.season == "default":
-        months = ["06","07","08","09"]
+        months = ["05","06","07","08","09"]
     elif (args.season).isnumeric():
         months = [args.season]
     else: 
