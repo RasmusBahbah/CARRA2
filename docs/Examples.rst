@@ -111,3 +111,12 @@ Example with all arguments
 
      
 
+monthlymaps.py
+================
+
+These examples are executed as command lines in a terminal, in your carra2py environment.
+The default settings is set to process for all regions with a resolution of 2500 meters using 4 CPU cores and then export as tif files.
+Please note, the user must input a start and end date for the processing.
+These examples are all exectued with the time period 1st of January, 1982 - 31st of December, 2022.
+
+
