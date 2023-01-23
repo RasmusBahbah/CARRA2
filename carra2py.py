@@ -30,7 +30,7 @@ logging.basicConfig(
         level=logging.INFO,
         datefmt='%Y-%m-%d %H:%M:%S',
         handlers=[
-            logging.FileHandler(f'logs/carra2_{time.strftime("%Y_%m_%d",time.localtime())}.log'),
+            logging.FileHandler(f'logs/carra2py_{time.strftime("%Y_%m_%d",time.localtime())}.log'),
             logging.StreamHandler()
         ])
         
@@ -139,7 +139,7 @@ class AVHRR():
         date_1 = dt.datetime.strptime(self.date, "%Y%m%d")
         
         procdatesplus = [(date_1 + delta).strftime("%Y%m%d") for delta in \
-                         [dt.timedelta(days=int(d)) for d in np.arange(0,6)]]
+                         [dt.timedelta(days=int(d)) for d in np.arange(0,10)]]
         
         procdates = ['20190624','20190625','20190618'] + procdatesplus
         
@@ -309,7 +309,7 @@ class AVHRR():
             os.mkdir(path)
             
         else:
-            logging.info(f'Output already existst, skippting {self.date}')
+            logging.info(f'Output already existst, skipping {self.date}')
             
         crs = CRS.from_string("+init=EPSG:3413")
         
