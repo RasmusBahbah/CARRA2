@@ -30,7 +30,7 @@ logging.basicConfig(
         level=logging.INFO,
         datefmt='%Y-%m-%d %H:%M:%S',
         handlers=[
-            logging.FileHandler(f'logs/carra2_{time.strftime("%Y_%m_%d",time.localtime())}.log'),
+            logging.FileHandler(f'logs/carra2py_{time.strftime("%Y_%m_%d",time.localtime())}.log'),
             logging.StreamHandler()
         ])
         
@@ -139,7 +139,7 @@ class AVHRR():
         date_1 = dt.datetime.strptime(self.date, "%Y%m%d")
         
         procdatesplus = [(date_1 + delta).strftime("%Y%m%d") for delta in \
-                         [dt.timedelta(days=int(d)) for d in np.arange(0,6)]]
+                         [dt.timedelta(days=int(d)) for d in np.arange(0,10)]]
         
         procdates = ['20190624','20190625','20190618'] + procdatesplus
         
@@ -155,7 +155,7 @@ class AVHRR():
                     pass
                 
         if check == 0:
-             logging.info('Data service is unavailable, try another date or later')
+             logging.info(f'Data service is unavailable for {self.date} , try another date or at another time')
              
              return None
         
@@ -165,9 +165,16 @@ class AVHRR():
         
         if polar is None: 
             raw_alb = np.array(ncfile["cdr_surface_albedo"])[0]
+            raw_cloud = np.array(ncfile["cdr_cloud_binary_mask"])[0]
+            
             raw_alb[raw_alb == 9999] = np.nan
+            #raw_cloud[raw_cloud == 9999] = np.nan
+            
             raw_lon = np.array(ncfile["longitude"])
             raw_lat = np.array(ncfile["latitude"])
+            
+            raw_alb[raw_cloud==1] = np.nan 
+            
             ncfile.close()
             
             if not any(~(np.isnan(raw_alb.ravel()))):                
@@ -179,8 +186,15 @@ class AVHRR():
             
         else: 
             raw_alb = np.array(ncfile["cdr_surface_albedo"])[0]
-            raw_x,raw_y = reproject(np.array(ncfile["longitude"]),np.array(ncfile["latitude"]))
+            raw_cloud = np.array(ncfile["cdr_cloud_binary_mask"])[0]
+            
             raw_alb[raw_alb == 9999] = np.nan
+            #raw_cloud[raw_cloud == 9999] = np.nan
+            
+            raw_alb[raw_cloud==1] = np.nan 
+            
+            raw_x,raw_y = reproject(np.array(ncfile["longitude"]),np.array(ncfile["latitude"]))
+            
             ncfile.close()
            
             if not any(~(np.isnan(raw_alb.ravel()))):
@@ -295,7 +309,7 @@ class AVHRR():
             os.mkdir(path)
             
         else:
-            logging.info(f'Output already existst, skippting {self.date}')
+            logging.info(f'Output already existst, skipping {self.date}')
             
         crs = CRS.from_string("+init=EPSG:3413")
         
