@@ -36,7 +36,7 @@ The outputs are in tif formats.
 Arguments:
 ----------------
 
-**-mo: the month the user wants to process in the gormat "mm"**
+**-mo: the month the user wants to process in the format "mm"**
 
 **-re: the input resoultion in meters, there are three choices [1000,2500,5000], default is set to 2500**
 
