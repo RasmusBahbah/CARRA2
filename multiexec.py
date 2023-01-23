@@ -9,10 +9,25 @@ import argparse
 import pandas as pd
 import sys 
 import carra2py
+import logging
+import os
+import time
 from multiprocessing import set_start_method,get_context
+
 if sys.version_info < (3, 4):
     raise "must use python 3.6 or greater"
     
+if not os.path.exists("logs"):
+        os.makedirs("logs")
+        
+logging.basicConfig(
+        format='%(asctime)s [%(levelname)s] %(name)s - %(message)s',
+        level=logging.INFO,
+        datefmt='%Y-%m-%d %H:%M:%S',
+        handlers=[
+            logging.FileHandler(f'logs/multiexec_{time.strftime("%Y_%m_%d",time.localtime())}.log'),
+            logging.StreamHandler()
+        ])
 
 def parse_arguments():
         parser = argparse.ArgumentParser(description='Date range excicuteable for the CARRA2 Module')
