@@ -38,7 +38,7 @@ Arguments:
 
 **-mo: the month the user wants to process in the format "mm"**
 
-**-re: the input resoultion in meters, there are three choices [1000,2500,5000], default is set to 2500**
+**-re: the input resolution in meters, there are three choices [1000,2500,5000], default is set to 2500**
 
 **-ar: the wanted areas to process, default is set to process for all areas**
 
