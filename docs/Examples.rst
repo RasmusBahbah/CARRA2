@@ -136,11 +136,6 @@ How to process a month, where the input resolution is different than 2500m
 **Process for August with input data at 1000m res.**
      ``python monthlymaps.py -mo 08 -re 1000``  
 
-How to process one Region
------------------------------
-**Process for July in Greenland**
-     ``python monthlymaps.py -mo 07 -ar Greenland``  
-
 How to process one or several Regions
 -----------------------------
 **Process for July in Greenland**
