@@ -115,7 +115,7 @@ monthlymaps.py
 ================
 
 Attention: this function can only be used if the user already have processed the albedo data using either carra2py.py or multiexec.py.
-For now, the input and output are in the tif file format, i.e. the carra2py.py or multiexec.pt processing has to be done in the tif format.
+For now, the input and output are in the tif file format, i.e. the carra2py.py or multiexec.py processing has to be done in the tif format.
 These examples are executed as command lines in a terminal, in your carra2py environment.
 The default settings is set to make monthly maps for all the regions of all the 2500m output data in the user folders in a given month of the year, and using 4 CPU cores.
 Please note the user has to input a specific month in the format "mm", e.g. May is "05" and October is "10". 
