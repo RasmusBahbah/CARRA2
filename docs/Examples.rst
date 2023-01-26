@@ -159,5 +159,5 @@ Example with all arguments
 --------------------------------------
 
 **Process using 6 cores, for Svalbard, with a 51000 meter resolution in September**
-     ``python multiexec.py -mo 09 -ar Svalbard -re 1000 -c 6 `` 
+     ``python multiexec.py -mo 09 -ar Svalbard -re 1000 -c 6`` 
 
