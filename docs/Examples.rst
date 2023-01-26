@@ -141,10 +141,13 @@ How to process one Region
 **Process for July in Greenland**
      ``python monthlymaps.py -mo 07 -ar Greenland``  
 
-How to process one Region
+How to process one or several Regions
 -----------------------------
 **Process for July in Greenland**
      ``python monthlymaps.py -mo 07 -ar Greenland``  
+     
+**Process for July in Iceland and Norway**
+  ``python monthlymaps.py -mo 07 -ar [Norway,Iceland]``  
 
 How to process with more or less than 4 CPU cores
 -----------------------------
@@ -158,6 +161,6 @@ How to process with more or less than 4 CPU cores
 Example with all arguments
 --------------------------------------
 
-**Process using 6 cores, for Svalbard, with a 51000 meter resolution in September**
-     ``python multiexec.py -mo 09 -ar Svalbard -re 1000 -c 6`` 
+**Process using 6 cores, for Svalbard and AlaskaYukon, with a 51000 meter resolution in September**
+     ``python multiexec.py -mo 09 -ar [Svalbard,AlaskaYukon] -re 1000 -c 6`` 
 
