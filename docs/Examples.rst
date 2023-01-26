@@ -157,5 +157,5 @@ Example with all arguments
 --------------------------------------
 
 **Process using 6 cores, for Svalbard and AlaskaYukon, with a 1000 meter resolution in September**
-     ``python multiexec.py -mo 09 -ar [Svalbard,AlaskaYukon] -re 1000 -c 6`` 
+     ``python monthlymaps.py -mo 09 -ar [Svalbard,AlaskaYukon] -re 1000 -c 6`` 
 
