@@ -7,7 +7,7 @@ Created on Fri Jan 20 11:40:50 2023
 
 
 import argparse
-from pyproj import CRS,Transformer
+from pyproj import CRS
 import sys 
 import logging
 import time
@@ -23,9 +23,9 @@ import xarray as xr
 warnings.filterwarnings("ignore", category=FutureWarning)
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 from multiprocessing import set_start_method,get_context
+
 if sys.version_info < (3, 4):
     raise "must use python 3.6 or greater"
- 
     
 if not os.path.exists("logs"):
         os.makedirs("logs")
@@ -48,8 +48,6 @@ def parse_arguments():
         args = parser.parse_args()
         return args
     
-    
-
 def multimaps(month,res,area,monthlyfolder):
     
     logging.info("Processing: " + month)
@@ -59,8 +57,6 @@ def multimaps(month,res,area,monthlyfolder):
     files = [glob.glob(f + os.sep + "*.tif") for f in folders]
     files = [item for sublist in files for item in sublist]
     files = [fi for fi in files if str(res) in fi]
-    
-    
     
     outputfolder = monthlyfolder + os.sep + month
     if not os.path.exists(outputfolder):
@@ -72,39 +68,27 @@ def multimaps(month,res,area,monthlyfolder):
         start = 1
         
         if filesarea:
-        
-            start = 1
-            
-            
             for i,f in enumerate(filesarea): 
-                
                 x,y,z,crs = opentiff(f)
-                #print(np.nanmean(z)) 
-                if start == 1: 
-                    
+                
+                if start == 1:    
                     data = np.tile(z * np.nan, (len(files), 1, 1))
-                    
                     start = 0
                     
                 data[i,:,:] = z
                 
-            
             m,n = np.shape(data[0,:,:])
-            
             mergemean = np.array([[np.nanmean(data[:,i,j]) for j in range(n)] for i in range(m)])
             mergemean[mergemean == 0] = np.nan
             sigma = np.nanstd(mergemean.ravel())
              
             if len(mergemean[~np.isnan(mergemean)]) > 0:
-                
                 mergemean = gaussian_filter(mergemean, sigma)
                 name = month + "_" + a + "_" + str(res) + "_monthlymean.tif"  
                 exporttiff(x,y,mergemean,CRS.from_string("+init=EPSG:3413"),outputfolder,name)
             
             logging.info(f"{a} in {month} has been exported")
-            
         else: 
-            
             logging.info(f"{a} in {month} had no data")
 
 def exporttiff(x,y,z,crs,path,filename):
@@ -145,12 +129,10 @@ def opentiff(filename):
    da = xr.open_rasterio(filename)
    proj = CRS.from_string(da.crs)
    
-   
    transform = Affine(*da.transform)
    elevation = np.array(da.variable[0],dtype=np.float32)
    nx,ny = da.sizes['x'],da.sizes['y']
    x,y = np.meshgrid(np.arange(nx,dtype=np.float32), np.arange(ny,dtype=np.float32)) * transform
-   
    da.close()
    
    return x,y,elevation,proj
@@ -158,13 +140,10 @@ def opentiff(filename):
 
 if __name__ == "__main__":
     
-    args = parse_arguments() 
-    
-    basefolder = os.getcwd() 
-    
+    args = parse_arguments()
+    basefolder = os.getcwd()
     thisyear = datetime.date.today().year
-
-    months = [str(y)+m for m in [args.month] for y in list(np.arange(1982,thisyear)) ]
+    months = [str(y)+m for m in [args.month] for y in list(np.arange(1982,thisyear))]
     if args.area == None:
         args.area = ["Greenland","Iceland","AlaskaYukon","Svalbard","Norway",\
                      "NovayaZemlya","SevernayaZemlya","SouthernArcticCanada",\
@@ -176,16 +155,13 @@ if __name__ == "__main__":
     area = [args.area for i in range(len(months))]
     
     logging.info("Number of Months: " + str(len(months)))
-    
     os.chdir("output")
-    
     monthlyfolder = basefolder + os.sep + "monthlymaps"
     
     if not os.path.exists(monthlyfolder):
         os.mkdir(monthlyfolder)
    
     monthlyfolder = [monthlyfolder for i in range(len(months))] 
-   
     set_start_method("spawn")
     
     with get_context("spawn").Pool(args.cores) as p:       
