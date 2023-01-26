@@ -114,9 +114,50 @@ Example with all arguments
 monthlymaps.py
 ================
 
+Attention: this function can only be used if the user already have processed the albedo data using either carra2py.py or multiexec.py.
+For now, the input and output are in the tif file format, i.e. the carra2py.py or multiexec.pt processing has to be done in the tif format.
 These examples are executed as command lines in a terminal, in your carra2py environment.
-The default settings is set to process for all regions with a resolution of 2500 meters using 4 CPU cores and then export as tif files.
-Please note, the user must input a start and end date for the processing.
-These examples are all exectued with the time period 1st of January, 1982 - 31st of December, 2022.
+The default settings is set to make monthly maps for all the regions of all the 2500m output data in the user folders in a given month of the year, and using 4 CPU cores.
+Please note the user has to input a specific month in the format "mm", e.g. May is "05" and October is "10". 
 
+How to process specific months
+-----------------------------
+**Process with default settings for June**
+     ``python monthlymaps.py -mo 06``  
+
+**Process with default settings for August**
+     ``python monthlymaps.py -mo 08``  
+
+How to process a month, where the input resolution is different than 2500m
+-----------------------------
+**Process for July with input data at 5000m res.**
+     ``python monthlymaps.py -mo 07 -re 5000``  
+     
+**Process for August with input data at 1000m res.**
+     ``python monthlymaps.py -mo 08 -re 1000``  
+
+How to process one Region
+-----------------------------
+**Process for July in Greenland**
+     ``python monthlymaps.py -mo 07 -ar Greenland``  
+
+How to process one Region
+-----------------------------
+**Process for July in Greenland**
+     ``python monthlymaps.py -mo 07 -ar Greenland``  
+
+How to process with more or less than 4 CPU cores
+-----------------------------
+**Process for July with 12 CPU Cores**
+     ``python monthlymaps.py -mo 07 -c 12``  
+
+**Process for July with 1 CPU Core**
+     ``python monthlymaps.py -mo 07 -c 1``  
+     
+     
+Example with all arguments
+--------------------------------------
+
+**Process using 6 cores, for Svalbard, with a 51000 meter resolution in September**
+     ``python multiexec.py -mo 09 -ar Svalbard -re 1000 -c 6 `` 
 
