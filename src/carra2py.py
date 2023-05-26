@@ -106,7 +106,8 @@ class AVHRR():
     def __init__(self,date,block = None):
             
         self.date = date
-        self.base_folder = os.getcwd()
+        self.src_folder = os.getcwd()
+        self.base_folder = os.path.abspath('..')
         self.block = block
         
         #print(self.block)
@@ -159,7 +160,7 @@ class AVHRR():
              
              return None
         
-        os.chdir(self.base_folder)
+        os.chdir(self.src_folder)
         
         ncfile = nc.Dataset(data_folder + os.sep + file)
         
@@ -274,7 +275,7 @@ class AVHRR():
                 ii = ii[~np.isnan(alb_filt.ravel()[ii])]
                 
                 
-                if (len(ii) == 0) or (datagrid.ravel()[i] != 220):
+                if (len(ii) < 4) or (datagrid.ravel()[i] != 220):
                     datagrid.ravel()[i] = np.nan
                     
                 else: 
@@ -307,9 +308,6 @@ class AVHRR():
         
         if not os.path.exists(path):
             os.mkdir(path)
-            
-        else:
-            logging.info(f'Output already existst, skipping {self.date}')
             
         crs = CRS.from_string("+init=EPSG:3413")
         
