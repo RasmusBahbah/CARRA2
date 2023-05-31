@@ -132,7 +132,7 @@ class AVHRR():
                 
             os.mkdir(data_folder)
             
-        os.chdir(data_folder)
+        #os.chdir(data_folder)
         
         
         base_url = 'https://www.ncei.noaa.gov/data/avhrr-polar-pathfinder-extended/access/nhem'
@@ -149,7 +149,7 @@ class AVHRR():
         for d in procdates: 
             if check == 0:
                 try: 
-                    file = 'Polar-APP-X_v02r00_Nhem_0400_d' + self.date + '_c' + d + '.nc'
+                    file = data_folder + os.sep + 'Polar-APP-X_v02r00_Nhem_0400_d' + self.date + '_c' + d + '.nc'
                     urllib.request.urlretrieve(base_url + "/" + self.date[:4] +  "/" + file, file)
                     check = 1
                 except:
@@ -160,7 +160,7 @@ class AVHRR():
              
              return None
         
-        os.chdir(self.src_folder)
+        #os.chdir(self.src_folder)
         
         ncfile = nc.Dataset(data_folder + os.sep + file)
         
@@ -275,7 +275,7 @@ class AVHRR():
                 ii = ii[~np.isnan(alb_filt.ravel()[ii])]
                 
                 
-                if (len(ii) < 4) or (datagrid.ravel()[i] != 220):
+                if (len(ii) < 6) or (datagrid.ravel()[i] != 220):
                     datagrid.ravel()[i] = np.nan
                     
                 else: 
