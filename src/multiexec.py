@@ -68,6 +68,12 @@ def multicarra2(date,res,area,out):
             
 if __name__ == "__main__":
     
+    
+    carra_f = os.path.abspath('..')
+    output_f = carra_f + os.sep + 'output'
+    mask_list = glob.glob(carra_f + os.sep + 'masks' + os.sep + '*.csv')
+    area_list = [m.split(os.sep)[-1].split('_')[0] for m in mask_list]
+    
     args = parse_arguments() 
     
     if args.season == "default":
@@ -77,36 +83,45 @@ if __name__ == "__main__":
     else: 
         months = ["01","02","03","04","05","06","07","08","09","10","11","12"]
         
+    
+    if args.area != "default":
+        area_not_done = args.area
         
     
-    carra_f = os.path.abspath('..')
-    output_f = carra_f + os.sep + 'output'
     
     dates = pd.date_range(start=args.sday,end=args.eday).to_pydatetime().tolist()
     dates = [d.strftime("%Y%m%d") for d in dates]
     dates = [d for d in dates if d[4:6] in [ m for m in months]]
+    ids = [(d + '_' + a) for d in dates for a in area_list]
     res_str = str(args.res)
     out_str = args.output
     
+    
     if os.path.exists(output_f): 
+        
         f_done = glob.glob(output_f + os.sep + '**' + os.sep + f'*{res_str}m_AVHRR.{out_str}',recursive=True)
-        f_done_dates = [f.split(os.sep)[-1][:8] for f in f_done]
-        dates = [d for d in dates if d not in f_done_dates]
+        f_done_id = [f.split(os.sep)[-1][:-16] for f in f_done]
+        
+        ids_not_done = [i for i in ids if i not in f_done_id]
+        dates_not_done_all =  [i[:8] for i in ids_not_done]
+        dates_not_done = [d for d in dates if d in dates_not_done_all]
+        
+        area_not_done = [[a[9:] for a in ids_not_done if (a[:8] == d)] for d in dates_not_done]
+        
     
-    
-    res = [args.res for i in range(len(dates))]
-    area = [args.area for i in range(len(dates))]
-    out = [args.output for i in range(len(dates))]
+    res = [args.res for i in range(len(dates_not_done))]
+    area = area_not_done
+    out = [args.output for i in range(len(dates_not_done))]
    
     
-    logging.info("Processing for date range: " + args.sday + " to " + args.eday)
-    logging.info("Number of Days: " + str(len(dates)))
+    logging.info(f"Processing for date range: {args.sday} to {args.eday}")
+    logging.info(f"Number of Days * Regions: {len(ids_not_done)}") 
    
     logging.info(f"Number of Cores: {args.cores}")
     
     set_start_method("spawn")
     
     with get_context("spawn").Pool(args.cores) as p:       
-            p.starmap(multicarra2,zip(dates,res,area,out))
+            p.starmap(multicarra2,zip(dates_not_done,res,area,out))
     
     logging.info("Processing Done!")
