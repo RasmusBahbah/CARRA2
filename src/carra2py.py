@@ -149,8 +149,9 @@ class AVHRR():
         for d in procdates: 
             if check == 0:
                 try: 
-                    file = data_folder + os.sep + 'Polar-APP-X_v02r00_Nhem_0400_d' + self.date + '_c' + d + '.nc'
-                    urllib.request.urlretrieve(base_url + "/" + self.date[:4] +  "/" + file, file)
+                    file_name = f'Polar-APP-X_v02r00_Nhem_0400_d{self.date}_c{d}.nc'
+                    file_down = data_folder + os.sep + file_name
+                    urllib.request.urlretrieve(base_url + "/" + self.date[:4] +  "/" + file_name, file_down)
                     check = 1
                 except:
                     pass
@@ -162,7 +163,7 @@ class AVHRR():
         
         #os.chdir(self.src_folder)
         
-        ncfile = nc.Dataset(data_folder + os.sep + file)
+        ncfile = nc.Dataset(data_folder + os.sep + file_name)
         
         if polar is None: 
             raw_alb = np.array(ncfile["cdr_surface_albedo"])[0]
