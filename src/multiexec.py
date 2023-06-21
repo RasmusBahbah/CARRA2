@@ -42,15 +42,15 @@ def parse_arguments():
         parser.add_argument("-st","--sday", type=str,help="Please input the start day")
         parser.add_argument("-en","--eday", type=str,help="Please input the end day")
         parser.add_argument("-re","--res", type=int,choices=[1000,2500,5000],default=2500,help="Please input the resolution of the output")
-        parser.add_argument("-ar","--area", type=str,default=None,help="Please input the areas you want to process")
+        parser.add_argument("-ar","--area", type=str,default='default',help="Please input the areas you want to process")
         parser.add_argument("-o","--output", type=str,default="tif",choices=["tif","csv","nc"],help="Please specify the out format")
         parser.add_argument("-c","--cores", type=int,default=4,help="Please input the number of cores you want to use")
         parser.add_argument("-se","--season", type=str,default="default",help="Please input the season or month you want to process")
+        parser.add_argument("-m","--mode", type=str,default="local",choices=["local","global"],help="Please input the process mode")
         args = parser.parse_args()
         return args
     
-    
-def multicarra2(date,res,area,out):
+def multicarra2_local(date,res,area,out):
   
     pathfinder = carra2py.AVHRR(date,block=True)
     data = pathfinder.proc(area=area,res=res)
@@ -72,12 +72,13 @@ if __name__ == "__main__":
     carra_f = os.path.abspath('..')
     output_f = carra_f + os.sep + 'output'
     mask_list = glob.glob(carra_f + os.sep + 'masks' + os.sep + '*.csv')
+    mask_list = [m for m in mask_list if 'Arctic' not in m]
     area_list = [m.split(os.sep)[-1].split('_')[0] for m in mask_list]
     
     args = parse_arguments() 
     
     if args.season == "default":
-        months = ["05","06","07","08","09"]
+        months = ["03","04","05","06","07","08","09"]
     elif (args.season).isnumeric():
         months = [args.season]
     else: 
@@ -85,43 +86,68 @@ if __name__ == "__main__":
         
     
     if args.area != "default":
-        area_not_done = args.area
+        area_list = args.area
         
-    
     
     dates = pd.date_range(start=args.sday,end=args.eday).to_pydatetime().tolist()
     dates = [d.strftime("%Y%m%d") for d in dates]
     dates = [d for d in dates if d[4:6] in [ m for m in months]]
-    ids = [(d + '_' + a) for d in dates for a in area_list]
+    
     res_str = str(args.res)
     out_str = args.output
+    mode = args.mode
     
-    
-    if os.path.exists(output_f): 
+    if os.path.exists(output_f) and mode == 'local': 
         
         f_done = glob.glob(output_f + os.sep + '**' + os.sep + f'*{res_str}m_AVHRR.{out_str}',recursive=True)
         f_done_id = [f.split(os.sep)[-1][:-16] for f in f_done]
         
+        ids = [(d + '_' + a) for d in dates for a in area_list]
         ids_not_done = [i for i in ids if i not in f_done_id]
         dates_not_done_all =  [i[:8] for i in ids_not_done]
         dates_not_done = [d for d in dates if d in dates_not_done_all]
         
         area_not_done = [[a[9:] for a in ids_not_done if (a[:8] == d)] for d in dates_not_done]
         
+    elif  os.path.exists(output_f) and mode == 'global':
+        
+       f_done = glob.glob(output_f + os.sep + '**' + os.sep + f'*Arctic_{res_str}m_AVHRR.{out_str}',recursive=True)
+       f_done_dates = [f.split(os.sep)[-1][:8] for f in f_done]
+      
+       dates_not_done = [d for d in dates if d not in f_done_dates]
+       area_not_done = ['Arctic' for d in dates_not_done]
     
+    
+    elif mode == 'local': 
+        
+        dates_not_done = dates
+        area_not_done = [[a for a in area_list] for d in dates_not_done]
+       
+    elif mode == 'global':
+        
+       dates_not_done = dates
+       area_not_done = ['Arctic' for d in dates_not_done]
+       
+       
+      
+       
     res = [args.res for i in range(len(dates_not_done))]
     area = area_not_done
     out = [args.output for i in range(len(dates_not_done))]
    
     
     logging.info(f"Processing for date range: {args.sday} to {args.eday}")
-    logging.info(f"Number of Days * Regions: {len(ids_not_done)}") 
-   
+    logging.info(f"Number of Days: {len(dates_not_done)}") 
+    logging.info(f"Mode: {mode}")
     logging.info(f"Number of Cores: {args.cores}")
     
     set_start_method("spawn")
     
     with get_context("spawn").Pool(args.cores) as p:       
-            p.starmap(multicarra2,zip(dates_not_done,res,area,out))
+            p.starmap(multicarra2_local,zip(dates_not_done,res,area,out))
+            p.close()
+            p.join()
     
+        
+        
     logging.info("Processing Done!")
