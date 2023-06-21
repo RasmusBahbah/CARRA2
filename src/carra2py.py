@@ -267,16 +267,17 @@ class AVHRR():
             
             tree = KDTree(np.transpose(np.array([xx_filt,yy_filt])))
             
-            
-            
             for i,(xmid,ymid) in enumerate(zip(x_grid.ravel(),y_grid.ravel())):     
                 dd, ii = tree.query([xmid,ymid],k = 20,p = 2)
+                
+                ii = ii[dd<45000] 
+                dd = dd[dd<45000]
                 
                 dd = dd[~np.isnan(alb_filt.ravel()[ii])]
                 ii = ii[~np.isnan(alb_filt.ravel()[ii])]
                 
                 
-                if (len(ii) < 6) or (datagrid.ravel()[i] != 220):
+                if (len(ii) < 3) or (datagrid.ravel()[i] != 220):
                     datagrid.ravel()[i] = np.nan
                     
                 else: 
@@ -326,7 +327,7 @@ class AVHRR():
             
             res = int((x[0,1] - x[0,0]) + (x[0,0] - x[1,0]))
             
-            filename = self.date + "_" + a + "_" + str(res) + "m_AVHRR.tif"
+            filename = f'{self.date}_{a}_{res}m_AVHRR.tif'
             
             exporttiff(x, y, z, crs, path, filename)
         
